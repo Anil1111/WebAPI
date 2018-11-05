@@ -1,0 +1,112 @@
+﻿@model WebAPI.Models.Grouper
+@{
+    /**/
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Scoring Groups";
+    // This page uses jquery which is bundled in _Layout.cshtml with this variable set:
+    ViewBag.JQueryNeeded = true;
+}
+
+<h2>Grouping Counter</h2>
+
+<p>
+    This App is for the Coding Assignment from adventofcode.com/2017/day/9.
+    <a href="/Home/Assignment">Click here for the Assignment Description</a>
+</p>
+
+<h2>TestGrouper Methods</h2>
+
+<style>
+    div#log {
+        font-family: monospace;
+        border: inset;
+        padding-left: 3px;
+        display: inline-flex;
+        background-color: #ffc;
+        height: 100px;
+        width: 500px;
+        font-size: smaller;
+        overflow-y: scroll;
+    }
+
+    div#Score {
+        text-align: center;
+        font-size: x-large;
+    }
+</style>
+
+<form method="post" action="/api/Grouper">
+    <div id="Score">
+        <div id="GroupingScore">&nbsp;</div>
+    </div>
+
+    <div style="vertical-align:top;">
+        <label for="TestText">Input the text you wish to test and the score will be calculated as you type:</label><br />
+        <textarea id="testStr" name="testStr" cols="80" rows="10">{This is a default test grouping <{}></{}>}</textarea>
+        <div id="log" style="vertical-align:top;">Log:</div>
+    </div>
+    <label for="submitBtn">To test what the server responds via a webForm post, click the submit button:</label>
+    <input id="submitBtn" type="submit" value="Submit" />
+</form>
+@using (Html.BeginForm("Grouper", "api", FormMethod.Post))
+{
+    @Html.TextBoxFor(m => m.testStr)
+    <input id="submitBtn" type="submit" value="Submit" />
+}
+
+@section scripts {
+<script type="text/javascript">
+    var uri = '/api/Grouper';
+    log("javascript start");
+    var processNum = 0;
+    $(document).ready(() => {
+        log("document ready");
+        $('#GroupingScore').hide();
+        $('#testStr').keyup(() => { processData(++processNum); })
+    });
+
+    function processData(i) {
+        log(i + ": posting to api call: " + uri);
+        $('#GroupingScore').show();
+        $('#GroupingScore').text("Checking...");
+
+        // Send Request
+        var f = $.post(uri, $('#testStr').val(), { dataType: 'text/xml' })
+            .done(function (data) {
+                log(i + ": " + data);
+                formatScore(data);
+            })
+            .fail(function (jqXHR, textMsg, error) {
+                formatScore(jqXHR.responseText);
+                log(i + ": " + "-" + error + " - Server Response:" + jqXHR.responseText);
+            });
+        //$('#GroupingScore').text(formatScore(f.responseText));
+        //$.post(uri);
+    }
+
+    function formatScore(data) {
+        if (data) {
+            changeGroupingScoreText('The Grouping Score is ' + data);
+        } else {
+            changeGroupingScoreText('Unknown response ' + new Date().toTimeString());;
+        }
+    }
+
+    function changeGroupingScoreText(str) {
+        $('#GroupingScore').css("color", "#f00");
+        setTimeout(() => { $('#GroupingScore').css("color", "#888"); }, 5000);
+        $('#GroupingScore').text(str);
+    }
+
+    function log(str) {
+        $('#log').css('position', 'absolute');
+        $('#log').css('top', null); // $('#testStr').height);
+        $('#log').css('height', $('#testStr').height());
+        $('#log')[0].innerHTML += '<br>' + str;
+        $('#log').scrollTop($('#log').prop("scrollHeight"))
+    }
+</script>
+}@*end section scripts*@
+
+

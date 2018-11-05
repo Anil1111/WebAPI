@@ -1,0 +1,54 @@
+﻿@using System.IO;
+@using System.Web.Hosting;
+@{ /*Layout = null;*/ /* https://github.com/showdownjs/showdown */
+    string err = "";
+}
+<style>
+    .container {
+        margin: auto;
+        width: 100%;
+    }
+</style>
+<script src="/Scripts/showdown.min.js"></script>
+@section scripts {
+<script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            console.log(1);
+            var converter = new showdown.Converter();
+            var result = document.getElementById("Result");
+            var i = 0;
+            var timerID = setInterval(() => {
+                result.innerText = "Loading." + ".".repeat(i);
+                i = (i > 10 ? 0 : i++);
+            }, 100);
+@{
+    string contents = "";
+    try
+    {
+        contents = File.ReadAllText(HostingEnvironment.MapPath("~") + @"Views\Home\Assignment.md");
+        contents = contents.Replace("\\", "\\\\").Replace("`", "\\`");
+    } catch (Exception e) { err += e.ToString(); }
+
+}
+            var html = converter.makeHtml(`@Html.Raw(contents)`);
+            clearInterval(timerID);
+            result.innerHTML = html;
+            console.log(2);
+        });
+        console.log(0);
+</script>
+}
+<div class="container"><div id="Result">Loading</div></div>
+@*@{
+    try
+    {
+        err += HostingEnvironment.MapPath("~");
+    }
+    catch (Exception e)
+    {
+        err += e.ToString();
+    }
+}*@
+
+<div class="has-error">@Html.Raw(err)</div>
+
