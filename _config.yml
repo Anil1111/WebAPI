@@ -1,0 +1,16 @@
+# note theme: jekyll-theme-minimal is still needed eventhough I have my own default.html master file.
+# it is needed because all of the CSS and other supporting files are loaded with this "theme:" statement
+theme: jekyll-theme-minimal
+timezone: America/New_York
+title: Empire Millennium Chat Blocker Chrome Extension
+show_downloads: true
+logo: images/ChatBox.jpeg
+google_analytics: UA-127176852-1
+favicon_url: "https://assets-cdn.github.com/favicon.ico"
+future: true
+# markdown_ext: "markdown,mkdown,mkdn,mkd,md"
+# testing sln from https://github.community/t5/GitHub-Pages/gitHub-pages-URL-404/m-p/4466#M341
+# thest did not help viewing https://sflanders95.github.io/EmpireMillenniumChatBlockerChromeExt/docs/test.html
+# include: [/docs]
+# include: /docs
+# include: docs
