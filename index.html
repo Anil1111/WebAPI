@@ -1,0 +1,41 @@
+---
+layout: default
+---
+
+<style>
+    .container {
+        margin: auto;
+        width: 100%;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.7/showdown.min.js"></script>
+<script>
+  var result;
+  document.addEventListener('DOMContentLoaded', (event) => {
+    result = document.getElementById("Result");
+
+    var url = 'https://raw.githubusercontent.com/sflanders95/WebAPI/master/WebAPI/Views/Home/Assignment.md';
+    $.get(url, (data, status) => {
+        displayMD(data, document.getElementById("Result"));
+      });
+    
+    url = 'https://raw.githubusercontent.com/sflanders95/WebAPI/master/README.md';
+    $.get(url, (data, status) => {
+        displayMD(data, document.getElementById("aResult"));
+      });
+  });
+
+function displayMD(textStr, field) {
+   var converter = new showdown.Converter();
+   var html = converter.makeHtml(textStr);
+   field.innerHTML = html;
+}
+</script>
+
+<div class="container"><div id="aResult">Loading...</div></div>
+
+<div class="container"><div id="Result"></div></div>
+
+
+
